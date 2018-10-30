@@ -25,10 +25,22 @@ io.sockets.on('connection',(socket)=>{
         console.log('Disconnected: %s socket connected' , connections.length);
     })
     socket.on('send message',(data)=>{
-        console.log(data);
-        io.sockets.emit('new message',{msg: data,dateAdd:moment().format('h:mm:ss ')});
+        
+        
+        io.sockets.emit('new message',{username:socket.username,msg: data,dateAdd:moment().format('h:mm:ss ')});
     })
      
+    socket.on('new user',(data,callback)=>{
+        callback(true) ;
+        socket.username = data;
+        users.push(socket.username);
+        updateUsernames();
+      
+    })
+     
+    function  updateUsernames(){
+        io.sockets.emit('get users' , users);
+    }
 
 
 })
